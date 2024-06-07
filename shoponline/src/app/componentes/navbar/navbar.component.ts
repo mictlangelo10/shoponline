@@ -10,7 +10,7 @@ import { Router } from '@angular/router'; // Importa Router aquí
 export class NavbarComponent {
   items: MenuItem[] | any;
 
-  constructor(private router: Router) {} // Inyecta Router en el constructor
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.items = [
@@ -20,14 +20,14 @@ export class NavbarComponent {
             label: 'Ingresar',
             icon: 'pi pi-sign-in',
             command: () => {
-              this.router.navigate(['/login']); // Agrega esta línea para redirigir al login
+              this.router.navigate(['/login']);
             },
           },
           {
             label: 'Registrar',
             icon: 'pi pi-user-plus',
             command: () => {
-              this.router.navigate(['/register']); // Opcional para redirigir al registro
+              this.router.navigate(['/register']);
             },
           },
         ],
