@@ -12,6 +12,10 @@ import { NavbarComponent } from './componentes/navbar/navbar.component';
 import { LoginComponent } from './componentes/login/login.component';
 import { RegisterComponent } from './componentes/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { HomeComponent } from './componentes/home/home.component';
+import { ProductosComponent } from './componentes/productos/productos.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +23,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NavbarComponent,
     LoginComponent,
     RegisterComponent,
+    HomeComponent,
+    ProductosComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,8 +32,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     PrimengModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
-  providers: [provideClientHydration()],
+  providers: [MessageService, provideClientHydration(), ConfirmationService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

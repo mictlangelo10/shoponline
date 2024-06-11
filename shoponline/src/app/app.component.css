@@ -1,0 +1,21 @@
+/* Estilos para centrar el contenido de la aplicación */
+.container {
+  display: flex; /* Usa flexbox para permitir el centrado */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  min-height: 80vh; /* Altura mínima para ocupar toda la pantalla visible */
+}
+
+/* Opcional: Ajustes específicos para mejorar el centrado en todas las vistas */
+body,
+html {
+  margin: 0;
+  height: 100%;
+  overflow: hidden; /* Evita desbordamientos innecesarios */
+}
+
+/* Asegura que los componentes individuales no excedan el ancho necesario y estén correctamente espaciados */
+p-card {
+  width: 360px; /* Ancho fijo para las tarjetas */
+  margin: 20px auto; /* Espacio superior e inferior y centrado horizontal */
+}
