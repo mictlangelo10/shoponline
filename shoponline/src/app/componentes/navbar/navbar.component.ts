@@ -1,21 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router'; // Importa Router aquí
+import { AuthService } from '../../servicios/auth.service';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   items: MenuItem[] | any;
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.items = [
-      {
-        items: [
+    this.authService.getAuthStatus().subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.items = [
+          {
+            label: 'Salir',
+            icon: 'pi pi-sign-out',
+            command: () => {
+              this.authService.setAuthStatus(false); // Desautenticar al usuario
+              sessionStorage.removeItem('email');
+              this.router.navigate(['/login']);
+            },
+          },
+        ];
+      } else {
+        this.items = [
           {
             label: 'Ingresar',
             icon: 'pi pi-sign-in',
@@ -30,8 +43,8 @@ export class NavbarComponent {
               this.router.navigate(['/register']);
             },
           },
-        ],
-      },
-    ];
+        ];
+      }
+    });
   }
 }

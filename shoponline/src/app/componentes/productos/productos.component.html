@@ -1,0 +1,466 @@
+<div class="product-container">
+  <p-table [value]="productos" [tableStyle]="{ 'min-width': '80rem' }">
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        Productos
+        <p-button
+          icon="pi pi-plus"
+          styleClass="p-button-rounded p-button-primary"
+          label="Nuevo"
+          (click)="showAddProductDialog()"
+        ></p-button>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Imagen</th>
+        <th>Precio</th>
+        <th>Categoría</th>
+        <th>Cantidad</th>
+        <th>Rating</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{ product.codigo }}</td>
+        <td>{{ product.nombre }}</td>
+        <td>
+          <img
+            [src]="product.imagen"
+            [alt]="product.nombre"
+            width="100"
+            class="shadow-4"
+          />
+        </td>
+        <td>{{ product.precio | currency : "USD" }}</td>
+        <td>{{ product.categoria }}</td>
+        <td>{{ product.cantidad }}</td>
+        <td>
+          <p-rating
+            [(ngModel)]="product.rating"
+            [readonly]="true"
+            [cancel]="false"
+          ></p-rating>
+        </td>
+        <td>
+          <p-tag
+            [value]="product.estadoInventario"
+            [severity]="getSeverity(product.estadoInventario)"
+          ></p-tag>
+        </td>
+        <td>
+          <p-button
+            icon="pi pi-pencil"
+            styleClass="p-button-rounded p-button-success"
+            [style]="{ margin: '0 10px' }"
+            (click)="showEditProductDialog(product)"
+          ></p-button>
+          <p-button
+            icon="pi pi-trash"
+            styleClass="p-button-rounded p-button-warning"
+            (click)="confirmDeleteProducto($event, product.id)"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="flex align-items-center justify-content-between">
+        En total hay {{ productos ? productos.length : 0 }} productos.
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmPopup> </p-confirmPopup>
+
+<!-- Agregar producto -->
+<p-dialog
+  header="Agregar Producto"
+  [(visible)]="displayAddProductDialog"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+>
+  <form [formGroup]="newProductForm">
+    <div class="p-fluid">
+      <div class="row-field">
+        <div class="p-field half-width">
+          <label for="codigo">Código</label>
+          <input id="codigo" type="text" pInputText formControlName="codigo" />
+          <div
+            *ngIf="
+              newProductForm.controls['codigo'].invalid &&
+              newProductForm.controls['codigo'].touched
+            "
+            class="p-error"
+          >
+            Código es requerido.
+          </div>
+        </div>
+        <div class="p-field half-width">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" type="text" pInputText formControlName="nombre" />
+          <div
+            *ngIf="
+              newProductForm.controls['nombre'].invalid &&
+              newProductForm.controls['nombre'].touched
+            "
+            class="p-error"
+          >
+            Nombre es requerido.
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="p-field">
+          <label for="descripcion">Descripción</label>
+          <input
+            id="descripcion"
+            type="text"
+            pInputText
+            formControlName="descripcion"
+          />
+          <div
+            *ngIf="
+              newProductForm.controls['descripcion'].invalid &&
+              newProductForm.controls['descripcion'].touched
+            "
+            class="p-error"
+          >
+            Descripción es requerida.
+          </div>
+        </div>
+      </div>
+      <div class="row-field">
+        <div class="p-field half-width">
+          <label for="precio">Precio</label>
+          <input
+            id="precio"
+            type="number"
+            pInputText
+            formControlName="precio"
+          />
+          <div
+            *ngIf="
+              newProductForm.controls['precio'].invalid &&
+              newProductForm.controls['precio'].touched
+            "
+            class="p-error"
+          >
+            Precio es requerido y debe ser mayor o igual a 0.
+          </div>
+        </div>
+        <div class="p-field half-width">
+          <label for="cantidad">Cantidad</label>
+          <input
+            id="cantidad"
+            type="number"
+            pInputText
+            formControlName="cantidad"
+          />
+          <div
+            *ngIf="
+              newProductForm.controls['cantidad'].invalid &&
+              newProductForm.controls['cantidad'].touched
+            "
+            class="p-error"
+          >
+            Cantidad es requerida y debe ser mayor o igual a 0.
+          </div>
+        </div>
+      </div>
+      <div class="row-field">
+        <div class="p-field half-width">
+          <label for="categoria">Categoría</label>
+          <input
+            id="categoria"
+            type="text"
+            pInputText
+            formControlName="categoria"
+          />
+          <div
+            *ngIf="
+              newProductForm.controls['categoria'].invalid &&
+              newProductForm.controls['categoria'].touched
+            "
+            class="p-error"
+          >
+            Categoría es requerida.
+          </div>
+        </div>
+
+        <div class="p-field half-width">
+          <label for="estadoInventario">Estado de Inventario</label>
+          <p-dropdown
+            [options]="estadosInventario"
+            formControlName="estadoInventario"
+          ></p-dropdown>
+          <div
+            *ngIf="
+              newProductForm.controls['estadoInventario'].invalid &&
+              newProductForm.controls['estadoInventario'].touched
+            "
+            class="p-error"
+          >
+            Estado de Inventario es requerido.
+          </div>
+        </div>
+      </div>
+      <div class="row-field">
+        <div class="p-field half-width">
+          <label for="imagen">Imagen</label>
+          <div class="file-input-container">
+            <button type="button" class="file-input-button">
+              Seleccionar archivo
+            </button>
+            <input
+              type="file"
+              id="fileInput"
+              (change)="onFileSelect($event)"
+              accept="image/*"
+            />
+            <span class="file-name-display">{{ selectedFileName }}</span>
+          </div>
+          <div
+            *ngIf="
+              newProductForm.controls['imagen'].invalid &&
+              newProductForm.controls['imagen'].touched
+            "
+            class="p-error"
+          >
+            Imagen es requerida.
+          </div>
+        </div>
+
+        <div class="p-field half-width">
+          <label for="rating">Rating</label>
+
+          <p-rating formControlName="rating"></p-rating>
+          <div
+            *ngIf="
+              newProductForm.controls['rating'].invalid &&
+              newProductForm.controls['rating'].touched
+            "
+            class="p-error"
+          >
+            Rating es requerido y debe estar entre 0 y 5.
+          </div>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="button-container">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          styleClass="p-button-rounded p-button-warning"
+          (click)="displayAddProductDialog = false"
+        ></p-button>
+        <p-button
+          label="Guardar"
+          icon="pi pi-check"
+          styleClass="p-button-rounded p-button-success"
+          (click)="addProduct()"
+          [disabled]="newProductForm.invalid"
+        ></p-button>
+      </div>
+    </p-footer>
+  </form>
+</p-dialog>
+
+<!-- Editar producto -->
+<p-dialog
+  header="Editar Producto"
+  [(visible)]="displayEditProductDialog"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+>
+  <form [formGroup]="editProductForm">
+    <div class="p-fluid">
+      <div class="row-field">
+        <div class="p-field half-width">
+          <label for="codigo">Código</label>
+          <input id="codigo" type="text" pInputText formControlName="codigo" />
+          <div
+            *ngIf="
+              editProductForm.controls['codigo'].invalid &&
+              editProductForm.controls['codigo'].touched
+            "
+            class="p-error"
+          >
+            Código es requerido.
+          </div>
+        </div>
+        <div class="p-field half-width">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" type="text" pInputText formControlName="nombre" />
+          <div
+            *ngIf="
+              editProductForm.controls['nombre'].invalid &&
+              editProductForm.controls['nombre'].touched
+            "
+            class="p-error"
+          >
+            Nombre es requerido.
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="p-field">
+          <label for="descripcion">Descripción</label>
+          <input
+            id="descripcion"
+            type="text"
+            pInputText
+            formControlName="descripcion"
+          />
+          <div
+            *ngIf="
+              editProductForm.controls['descripcion'].invalid &&
+              editProductForm.controls['descripcion'].touched
+            "
+            class="p-error"
+          >
+            Descripción es requerida.
+          </div>
+        </div>
+      </div>
+      <div class="row-field">
+        <div class="p-field half-width">
+          <label for="precio">Precio</label>
+          <input
+            id="precio"
+            type="number"
+            pInputText
+            formControlName="precio"
+          />
+          <div
+            *ngIf="
+              editProductForm.controls['precio'].invalid &&
+              editProductForm.controls['precio'].touched
+            "
+            class="p-error"
+          >
+            Precio es requerido y debe ser mayor o igual a 0.
+          </div>
+        </div>
+        <div class="p-field half-width">
+          <label for="cantidad">Cantidad</label>
+          <input
+            id="cantidad"
+            type="number"
+            pInputText
+            formControlName="cantidad"
+          />
+          <div
+            *ngIf="
+              editProductForm.controls['cantidad'].invalid &&
+              editProductForm.controls['cantidad'].touched
+            "
+            class="p-error"
+          >
+            Cantidad es requerida y debe ser mayor o igual a 0.
+          </div>
+        </div>
+      </div>
+      <div class="row-field">
+        <div class="p-field half-width">
+          <label for="categoria">Categoría</label>
+          <input
+            id="categoria"
+            type="text"
+            pInputText
+            formControlName="categoria"
+          />
+          <div
+            *ngIf="
+              editProductForm.controls['categoria'].invalid &&
+              editProductForm.controls['categoria'].touched
+            "
+            class="p-error"
+          >
+            Categoría es requerida.
+          </div>
+        </div>
+
+        <div class="p-field half-width">
+          <label for="estadoInventario">Estado de Inventario</label>
+          <p-dropdown
+            [options]="estadosInventario"
+            formControlName="estadoInventario"
+          ></p-dropdown>
+          <div
+            *ngIf="
+              editProductForm.controls['estadoInventario'].invalid &&
+              editProductForm.controls['estadoInventario'].touched
+            "
+            class="p-error"
+          >
+            Estado de Inventario es requerido.
+          </div>
+        </div>
+      </div>
+      <div class="row-field">
+        <div class="p-field half-width">
+          <label for="imagen">Imagen</label>
+          <div class="file-input-container">
+            <button type="button" class="file-input-button">
+              Seleccionar archivo
+            </button>
+            <input
+              type="file"
+              id="fileInput"
+              (change)="onFileSelect($event)"
+              accept="image/*"
+            />
+            <span class="file-name-display">{{ selectedFileName }}</span>
+          </div>
+          <div
+            *ngIf="
+              editProductForm.controls['imagen'].invalid &&
+              editProductForm.controls['imagen'].touched
+            "
+            class="p-error"
+          >
+            Imagen es requerida.
+          </div>
+        </div>
+
+        <div class="p-field half-width">
+          <label for="rating">Rating</label>
+          <p-rating formControlName="rating"></p-rating>
+          <div
+            *ngIf="
+              editProductForm.controls['rating'].invalid &&
+              editProductForm.controls['rating'].touched
+            "
+            class="p-error"
+          >
+            Rating es requerido y debe estar entre 0 y 5.
+          </div>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="button-container">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          styleClass="p-button-rounded p-button-warning"
+          (click)="displayEditProductDialog = false"
+          class="button-spacing"
+        ></p-button>
+        <p-button
+          label="Guardar"
+          icon="pi pi-check"
+          styleClass="p-button-rounded p-button-success"
+          (click)="updateProduct()"
+          [disabled]="editProductForm.invalid"
+        ></p-button>
+      </div>
+    </p-footer>
+  </form>
+</p-dialog>

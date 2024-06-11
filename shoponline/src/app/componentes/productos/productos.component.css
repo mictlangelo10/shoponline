@@ -1,0 +1,136 @@
+/* Asumiendo que .product-container es la clase del contenedor de la tabla de productos */
+.product-container {
+  margin-top: 20px; /* Ajusta este valor según tus necesidades */
+}
+
+.row-field {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem; /* Añade un margen entre filas si es necesario */
+}
+
+.half-width {
+  flex: 0 0 48%; /* Asigna un ancho a cada campo */
+}
+
+.row {
+  justify-content: space-between;
+  margin-bottom: 1rem; /* Añade un margen entre filas si es necesario */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Centra los elementos horizontalmente */
+  gap: 10px; /* Espacio opcional entre los botones */
+}
+.p-field label {
+  display: block; /* Asegura que la etiqueta ocupe su propia línea */
+}
+
+.p-rating {
+  display: block; /* Asegura que el rating también ocupe su propia línea */
+  margin-top: 5px; /* Opcional: añade un pequeño margen superior para separación */
+}
+
+/* Estilos para el contenedor del input de archivo */
+.file-input-container {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+/* Estilo para simular un botón más atractivo */
+.file-input-button {
+  color: white;
+  background-color: #007ad9;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Estilos para el input real, que estará oculto */
+input[type="file"] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+/* Agrega algunos estilos al texto del nombre del archivo seleccionado, si lo deseas */
+.file-name-display {
+  margin-left: 10px;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+/* Definición de colores base */
+:root {
+  --color-primary: #5b8df8; /* Azul claro */
+  --color-secondary: #f9c851; /* Amarillo */
+  --color-success: #67c23a; /* Verde */
+  --color-danger: #f56c6c; /* Rojo */
+  --color-text: #333; /* Texto oscuro */
+  --color-bg: #fff; /* Fondo blanco */
+  --color-header: #eee; /* Fondo del encabezado */
+}
+
+/* Estilos básicos de la tabla */
+.product-container .p-table {
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+.product-container .p-table th {
+  background-color: var(--color-header);
+  color: var(--color-primary);
+}
+
+.product-container .p-table td {
+  border-bottom: 1px solid var(--color-header);
+}
+
+/* Personalización de botones dentro de la tabla */
+.product-container .p-button {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.product-container .p-button-success {
+  background-color: var(--color-success);
+}
+
+.product-container .p-button-warning {
+  background-color: var(--color-danger);
+}
+
+/* Estilos para las tags de estado */
+.product-container .p-tag {
+  font-weight: bold;
+}
+
+.product-container .p-tag-success {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.product-container .p-tag-warning {
+  background-color: var(--color-secondary);
+  color: black;
+}
+
+.product-container .p-tag-danger {
+  background-color: var(--color-danger);
+  color: white;
+}
+
+.product-container .p-table th {
+  background-color: var(--color-header) !important;
+  color: var(--color-primary) !important;
+}
+
+.product-container .p-button {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+}
